@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
+const fs = require ('fs');
 
-const boatRampsGeoJSON = require('../data/boat_ramps.geojson');
+router.get('/all', (req, res) => {
+  const boatRampGeoJSON = JSON.parse(fs.readFileSync('./data/boat_ramps.geojson', 'utf8'));
+  res.json(boatRampGeoJSON);
+});
 
-router.get('/boat_ramps', (req, res, next) => {
-  res.json(boatRampsGeoJSON);
-})
+module.exports = router;
