@@ -1,9 +1,12 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const fs = require ('fs');
+import fs from 'fs';
 
-router.get('/all', (req: any, res: any) => {
-  const boatRampGeoJSON = JSON.parse(fs.readFileSync('./data/boat_ramps.geojson', 'utf8'));
+import { getGeoDataInBounds } from '../processing';
+
+const boatRampGeoJSON = JSON.parse(fs.readFileSync('./data/boat_ramps.geojson', 'utf8'));
+
+router.get('/data', (req: any, res: any) => {
   res.json(boatRampGeoJSON);
 });
 
@@ -11,10 +14,15 @@ router.get('/all', (req: any, res: any) => {
  * /data/filter?southWest=52.1,-152.3&northEast=53.1,-154.2
  */
 router.get('/data/filter', function (req: any, res: any) {
-    var southWest = req.query.southWest.split(',');
-    var northEast = req.query.northEast.split(',');
-    console.log(southWest);
-    console.log(northEast);
+    console.log('request to filter')
+    let southWest = req.query.southWest.split(',');
+    let northEast = req.query.northEast.split(',');
+    let latMin = parseFloat(southWest[0]),
+        lngMin = parseFloat(southWest[1]),
+        latMax = parseFloat(northEast[0]),
+        lngMax = parseFloat(northEast[1]);
+    let filteredDataInBounds = getGeoDataInBounds(latMin, lngMin, latMax, lngMax, boatRampGeoJSON);
+    res.json(filteredDataInBounds);
 });
 
 export default router;

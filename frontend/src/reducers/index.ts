@@ -19,6 +19,13 @@ const geoJsonReducer = (state: IMapState = mapState, action: any) => {
   switch(action.type){
     case 'FETCH_ALL_GEOJSON':
       return {...state, boatRampsGeoJSON: action.payload};
+    case 'FETCH_GEOJSON_IN_BOUNDS':
+      const { totalFeatures, features } = action.payload;
+      return { ...state, boatRampsGeoJSON: {
+        ...state.boatRampsGeoJSON,
+        totalFeatures: totalFeatures,
+        features: features
+      }}
     case 'UPDATE_MAP_BOUNDS':
       return {...state, mapBounds: action.payload};
     default: 

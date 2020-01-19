@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import './Map.css';
 
-import { fetchAllBoatRamps, setMapBounds } from '../actions/actions';
+import { fetchAllBoatRamps, setMapBounds, fetchRampsWithinBounds } from '../actions/actions';
 
-import L from 'leaflet';
+import L, { LatLngBounds } from 'leaflet';
 import { IState, IMapBounds } from '../constants/interfaces';
 
 const Map: React.FC = () => {
@@ -28,26 +28,26 @@ const Map: React.FC = () => {
         baseLayer
       ]
     });
-
+    
+    // Fetch all ramp geodata. CHANGE TO FETCHING WITHIN BOUNDS !!!
     dispatch(fetchAllBoatRamps());
 
+    // Get map bounds of view
     let mapInstance: L.Map = mapRef.current;
+    // When map is first rendered, we want to fetch the ramps within the view only and then every time on panning
+    dispatch(fetchRampsWithinBounds(mapInstance.getBounds()));
+    // bind map panning to updating the view bounds in state
     mapInstance.on('moveend', () => {
       let latLngBounds = mapInstance.getBounds();
-      const newBounds = {
-        south: latLngBounds.getSouthWest().lat,
-        west: latLngBounds.getSouthWest().lng,
-        north: latLngBounds.getNorthEast().lat,
-        east: latLngBounds.getNorthEast().lng
-      };
-      updateBounds(newBounds);
+      updateBounds(latLngBounds, 1000);
     });
   }, []);
 
   useEffect(() => {
     if (boatRampData.totalFeatures > 0) {
       console.log('reloading map with geojson')
-      // Add GeoJSON to leaflet map with popup
+      console.log(boatRampData)
+      // Add GeoJSON data to leaflet map with popup
       L.geoJSON(boatRampData, {
         onEachFeature: function (feature, layer) {
           layer.bindPopup(buildPopup(feature), {
@@ -70,8 +70,13 @@ const Map: React.FC = () => {
     return popupContent
   };
 
-  const updateBounds = (newBounds: IMapBounds) => {
-    let interval = 1000; //5 seconds
+  const updateBounds = (latLngBounds: LatLngBounds, interval: number) => {
+    let newBounds: IMapBounds = {
+      south: latLngBounds.getSouthWest().lat,
+      west: latLngBounds.getSouthWest().lng,
+      north: latLngBounds.getNorthEast().lat,
+      east: latLngBounds.getNorthEast().lng
+    };
     if (newBounds != currentBounds) {
       // if timeoutRef is set
       if(mapPanTimeout){
@@ -80,6 +85,7 @@ const Map: React.FC = () => {
       };
       mapPanTimeout.current = setTimeout(function() {
         console.log('setting new bounds');
+        dispatch(fetchRampsWithinBounds(latLngBounds));
         setMapBounds(newBounds, dispatch);
       }, interval);
       console.log(mapPanTimeout.current);
