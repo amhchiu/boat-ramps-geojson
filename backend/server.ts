@@ -1,6 +1,6 @@
-const express = require('express');
+import express from 'express';
+import router from './routes/api';
 const app = express();
-const router = require('./routes/api');
 
 /**
  * Middleware. 
@@ -13,7 +13,7 @@ app.use((req, res, next) => {
 
 app.use('/', router);
 
-const PORT = 8081;
+const PORT = 8080;
 
 app.listen( PORT, () => {
   console.log(`Express server started on http://localhost:${PORT}`);
