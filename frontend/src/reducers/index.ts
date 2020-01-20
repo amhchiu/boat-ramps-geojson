@@ -7,7 +7,10 @@ import {
   GET_RAMPS_MATERIALS_IN_BOUNDS,
   GET_RAMPS_PER_SIZE_CATEGORY_IN_BOUNDS,
   UPDATE_SELECTED_MATERIAL,
-  CLEAR_SELECTED_MATERIAL
+  CLEAR_SELECTED_MATERIAL,
+  UPDATE_TOTAL_FEATURES,
+  UPDATE_SELECTED_SIZECAT,
+  CLEAR_SELECTED_SIZECAT
 
 } from '../actions/actionTypes';
 
@@ -46,10 +49,18 @@ const geoJsonReducer = (state: IMapState = mapState, action: any) => {
     case UPDATE_MAP_BOUNDS:
       return {...state, mapBounds: action.payload};
     case UPDATE_SELECTED_MATERIAL:
-      console.log(action.payload);
       return {...state, selectedMaterial: action.payload};
     case CLEAR_SELECTED_MATERIAL: 
       return {...state, selectedMaterial: ''};
+    case UPDATE_SELECTED_SIZECAT:
+      return {...state, selectedSizeCategory: action.payload};
+    case CLEAR_SELECTED_SIZECAT:
+      return {...state, selectedSizeCategory: ''};
+    case UPDATE_TOTAL_FEATURES:
+      return {...state, boatRampsGeoJSON: {
+        ...state.boatRampsGeoJSON,
+        totalFeatures: action.payload
+      }};
     default: 
       return state;
   }

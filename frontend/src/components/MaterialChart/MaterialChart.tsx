@@ -34,9 +34,7 @@ const MaterialChart = (props: IProps) => {
   const { data, xLabel, yLabel } = props;
   const dispatch = useDispatch();
   const selectedMaterial = useSelector((state: IState) => state.mapData.selectedMaterial)
-  const [selectedBar, setSelectedBar] = useState();
   const d3Container = useRef(null);
-
 
   useEffect(() => {
 

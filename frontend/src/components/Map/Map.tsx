@@ -1,17 +1,19 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import './Map.css';
 
 import { fetchAllBoatRamps, setMapBounds, fetchRampsWithinBounds } from '../../actions/actions';
 
-import L, { LatLngBounds } from 'leaflet';
+import L, { LatLngBounds, featureGroup } from 'leaflet';
 import { IState, IMapBounds, IGeoJSON } from '../../constants/interfaces';
-import { filterColourFromMaterialSelection } from '../utils';
+import { filterColourFromMaterialSelection, filterColourFromSizeCategorySelection } from '../utils';
+import { setTotalFeatures } from '../../actions/MapActions/mapActions';
 
 const Map: React.FC = () => {
   const dispatch = useDispatch();
   const mapRef = useRef<any>(null);
 
+  const [featuresVisible, setFeaturesVisible] = useState(0);
   const mapPanTimeout = useRef<any>(null);
   const boatRampData = useSelector((state: IState) => state.mapData.boatRampsGeoJSON);
   const currentBounds = useSelector((state: IState) => state.mapData.mapBounds);
@@ -47,10 +49,15 @@ const Map: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    console.log(selectedMaterial);
+    let mapInstance: L.Map = mapRef.current;
+    mapInstance.eachLayer(function(layer) {
+      if(layer instanceof L.GeoJSON){
+        mapInstance.removeLayer(layer);
+      }
+    });
     if (boatRampData.totalFeatures > 0) {
-      // Add GeoJSON data to leaflet map with popup
-      L.geoJSON(boatRampData, {
+      // Add GeoJSON data to leaflet map with popup      
+      let newLayer = L.geoJSON(boatRampData, {
         filter: function (feature) {
           // neither selected
           if (!selectedMaterial && !selectedSizeCategory) {
@@ -71,11 +78,16 @@ const Map: React.FC = () => {
         style: function (feature) {
           let colour = '#0000FF';
           if(selectedMaterial) colour = filterColourFromMaterialSelection(selectedMaterial);
+          if(selectedSizeCategory) colour = filterColourFromSizeCategorySelection(selectedSizeCategory);
           return { color: colour }
-        },
+        }
       }).addTo(mapRef.current);
+
+      setFeaturesVisible(newLayer.getLayers().length);
     }
-  }, [boatRampData, selectedMaterial]);
+  }, [boatRampData, selectedMaterial, selectedSizeCategory]);
+
+
 
   const filterFeatureFromChartSelection = (feature: GeoJSON.Feature<GeoJSON.Geometry, any>) => {
     let properties = feature.properties;
@@ -132,7 +144,7 @@ const Map: React.FC = () => {
       <div id='map' style={styles.map}>
       </div>
       <div className='row'>
-        Number of Ramps Visible - {boatRampData.totalFeatures}
+        Number of Ramps Visible - {featuresVisible}
       </div>
     </>
   );

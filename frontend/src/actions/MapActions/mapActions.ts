@@ -7,7 +7,10 @@ import {
   UPDATE_MAP_BOUNDS, 
   FETCH_GEOJSON_IN_BOUNDS,
   UPDATE_SELECTED_MATERIAL,
-  CLEAR_SELECTED_MATERIAL
+  CLEAR_SELECTED_MATERIAL,
+  UPDATE_TOTAL_FEATURES,
+  UPDATE_SELECTED_SIZECAT,
+  CLEAR_SELECTED_SIZECAT
 } from '../actionTypes';
 
 const baseURL = 'http://localhost:8080';
@@ -51,4 +54,17 @@ export const setSelectedMaterial = (material: string, dispatch: Dispatch<any>) =
 
 export const clearSelectedMaterial = (dispatch: Dispatch<any>) => {
   dispatch({type: CLEAR_SELECTED_MATERIAL});
+}
+
+export const setSelectedSizeCategory = (sizeCategory: string, dispatch: Dispatch<any>) => {
+  dispatch({type: UPDATE_SELECTED_SIZECAT, payload: sizeCategory});
+};
+
+export const clearSelectedSizeCategory = (dispatch: Dispatch<any>) => {
+  dispatch({type: CLEAR_SELECTED_SIZECAT});
+};
+
+export const setTotalFeatures = (total: number, dispatch: Dispatch<any>) => {
+  console.log('updateing total'+total)
+  dispatch({type: UPDATE_TOTAL_FEATURES, payload: total});
 }

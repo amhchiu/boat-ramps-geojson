@@ -7,13 +7,13 @@ export const filterColourFromMaterialSelection = (material: string) => {
   let newColour = '';
   switch (material) {
     case 'Gravel':
-      newColour = 'yellow';
+      newColour = 'red';
       break;
     case 'Concrete':
       newColour = 'gray';
       break;
     case 'Bitumen':
-      newColour = 'orange';
+      newColour = 'black';
       break;
     case 'Interlock Conc Block':
       newColour = 'olive';
@@ -23,6 +23,26 @@ export const filterColourFromMaterialSelection = (material: string) => {
       break;
     case 'Earth':
       newColour = 'green';
+      break;
+    default:
+      newColour = 'steelblue';
+      break;
+  }
+  return newColour;
+}
+
+export const filterColourFromSizeCategorySelection = (sizeCategory: string) => {
+  let newColour = '';
+  console.log(sizeCategory)
+  switch (sizeCategory) {
+    case '0-50':
+      newColour = 'salmon';
+      break;
+    case '50-200':
+      newColour = 'fuchsia'
+      break;
+    case '200-526':
+      newColour = 'maroon';
       break;
     default:
       newColour = 'steelblue';

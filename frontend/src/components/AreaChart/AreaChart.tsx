@@ -3,7 +3,9 @@ import { select, scaleLinear, axisLeft, scaleBand, axisBottom, max, selectAll, a
 import { IState, IRampsArea } from '../../constants/interfaces';
 import { theme } from '../../constants'
 import './AreaChart.css';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { filterColourFromSizeCategorySelection } from '../utils';
+import { clearSelectedSizeCategory, setSelectedSizeCategory } from '../../actions/MapActions/mapActions';
 
 interface IProps {
   data: IRampsArea[],
@@ -25,6 +27,7 @@ const BarChart = (props: IProps) => {
 
   const { data, xLabel, yLabel } = props;
   const dispatch = useDispatch();
+  const selectedSizeCategory = useSelector((state: IState) => state.mapData.selectedSizeCategory);
   const d3Container = useRef(null);
 
   useEffect(() => {
@@ -33,7 +36,6 @@ const BarChart = (props: IProps) => {
       const xValueName = keys[0],
         yValueName = keys[1];
       
-        
       data.sort((a: IRampsArea, b: IRampsArea) => {
         let a1 = a.area.split('-');
         let b1 = b.area.split('-');
@@ -63,8 +65,6 @@ const BarChart = (props: IProps) => {
         .range([0, CHART_WIDTH])
         .padding(0.25)
 
-
-      console.log(xScale.domain())
       // Add new group element yaxis to chart element
       chart.append('g')
         .call(axisLeft(yScale));
@@ -88,8 +88,17 @@ const BarChart = (props: IProps) => {
         .attr('height', (value: IRampsArea | any) => CHART_HEIGHT - yScale(value[yValueName] as number))
         .attr('width', xScale.bandwidth())
         .on('click', function (value: IRampsArea) {
-          console.log(value)
-          filterGeoDataWithSelection(value);
+          console.log(selectedSizeCategory);
+          console.log(value.area);
+          if (selectedSizeCategory == value.area) clearSelectedSizeCategory(dispatch);
+          else setSelectedSizeCategory(value.area, dispatch);
+        })
+        .each(function (value: IRampsArea) {
+          if (selectedSizeCategory === value.area) {
+            select(this).style('fill', filterColourFromSizeCategorySelection(value.area));
+          } else {
+            select(this).style('fill', 'steelblue');
+          }
         });
 
       // Axis labels
@@ -106,7 +115,7 @@ const BarChart = (props: IProps) => {
         .attr('text-anchor', 'middle')
         .text(xLabel);
     }
-  }, [data]);
+  }, [data, selectedSizeCategory]);
 
 
   const filterGeoDataWithSelection = (data: IRampsArea) => {
