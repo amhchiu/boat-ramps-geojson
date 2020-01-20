@@ -79,7 +79,8 @@ const Map: React.FC = () => {
           let colour = '#0000FF';
           if(selectedMaterial) colour = filterColourFromMaterialSelection(selectedMaterial);
           if(selectedSizeCategory) colour = filterColourFromSizeCategorySelection(selectedSizeCategory);
-          return { color: colour }
+          
+          return { color: colour, weight: 5 }
         }
       }).addTo(mapRef.current);
 

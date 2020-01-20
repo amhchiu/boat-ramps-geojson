@@ -5,7 +5,7 @@ import { theme } from '../../constants'
 import './AreaChart.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { filterColourFromSizeCategorySelection } from '../utils';
-import { clearSelectedSizeCategory, setSelectedSizeCategory } from '../../actions/MapActions/mapActions';
+import { clearSelectedSizeCategory, setSelectedSizeCategory, clearSelectedMaterial } from '../../actions/MapActions/mapActions';
 
 interface IProps {
   data: IRampsArea[],
@@ -91,7 +91,10 @@ const BarChart = (props: IProps) => {
           console.log(selectedSizeCategory);
           console.log(value.area);
           if (selectedSizeCategory == value.area) clearSelectedSizeCategory(dispatch);
-          else setSelectedSizeCategory(value.area, dispatch);
+          else {
+            clearSelectedMaterial(dispatch);
+            setSelectedSizeCategory(value.area, dispatch);
+          }
         })
         .each(function (value: IRampsArea) {
           if (selectedSizeCategory === value.area) {

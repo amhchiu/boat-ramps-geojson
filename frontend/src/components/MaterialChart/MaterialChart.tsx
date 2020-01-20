@@ -4,7 +4,7 @@ import { IState, IRampsMaterial } from '../../constants/interfaces';
 import { theme } from '../../constants'
 import './MaterialChart.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { setSelectedMaterial, clearSelectedMaterial } from '../../actions/MapActions/mapActions';
+import { setSelectedMaterial, clearSelectedMaterial, clearSelectedSizeCategory } from '../../actions/MapActions/mapActions';
 import { filterColourFromMaterialSelection } from '../utils';
 
 interface IProps {
@@ -92,8 +92,13 @@ const MaterialChart = (props: IProps) => {
         .attr('height', (value: IRampsMaterial | any) => CHART_HEIGHT - yScale(value[yValueName] as number))
         .attr('width', xScale.bandwidth())
         .on('click', function (value: IRampsMaterial, index: number) {
-          if (selectedMaterial === value.material) clearSelectedMaterial(dispatch);
-          else setSelectedMaterial(value.material, dispatch);
+          if (selectedMaterial === value.material) {
+            clearSelectedMaterial(dispatch);
+          }
+          else {
+            clearSelectedSizeCategory(dispatch);
+            setSelectedMaterial(value.material, dispatch);
+          }
         })
         .each(function (value: IRampsMaterial) {
           if (selectedMaterial === value.material) {
