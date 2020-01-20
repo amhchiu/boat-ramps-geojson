@@ -105,6 +105,6 @@ const styles = {
   map: {
     textAlign: 'center' as const,
     width: '100%',
-    height: '400px'
+    height: '50vh'
   }
 };

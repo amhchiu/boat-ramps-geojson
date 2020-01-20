@@ -7,19 +7,24 @@ import { theme } from './constants';
 import './App.css';
 import { IState, IRampsMaterial } from './constants/interfaces';
 import { useSelector, useDispatch } from 'react-redux';
-import { getRampsPerMaterialInBounds } from './actions/actions';
+import { getRampsPerMaterialInBounds, getRampsPerSizeCategoryInBounds } from './actions/actions';
 
 const App: React.FC = () => {
 
   const dispatch = useDispatch();
   const [formattedRampMaterialChartData, setFormattedRampMaterialChartData] = useState<IRampsMaterial[]>([]);
+  const [formattedRampsSizeChartData, setFormattedRampsSizeChartData] = useState<any>([]);
+
   const boatRampData = useSelector((state: IState) => state.mapData.boatRampsGeoJSON);
   const rampsPerMaterialData = useSelector((state: IState) => state.chartData.rampsPerMaterial);
+  const rampsPerSizeCategoryData = useSelector((state: IState) => state.chartData.rampsPerSizeCategory);
+  const areaCategories = [50, 200, 526];
 
   useEffect(() => {
     console.log('updating ramps per materials')
     if (boatRampData.totalFeatures > 0) {
       getRampsPerMaterialInBounds(boatRampData, dispatch);
+      getRampsPerSizeCategoryInBounds(boatRampData, areaCategories, dispatch);
     }
   }, [boatRampData]);
 
@@ -32,11 +37,23 @@ const App: React.FC = () => {
           ramps: rampsPerMaterialData[material]
         });
       };
-      console.log(barChartData);
       setFormattedRampMaterialChartData(barChartData);
     }
   }, [rampsPerMaterialData]);
 
+  useEffect(() => {
+    if (Object.entries(rampsPerSizeCategoryData).length > 0){
+      let barChartData = [];
+      for(let area in rampsPerSizeCategoryData){
+        barChartData.push({
+          area: area,
+          ramps: rampsPerSizeCategoryData[area]
+        });
+      };
+      setFormattedRampsSizeChartData(barChartData);
+    }
+  }, [rampsPerSizeCategoryData]);
+  
   return (
     <div className="App" style={styles.container}>
       <div className="row">
@@ -55,11 +72,24 @@ const App: React.FC = () => {
             <h3>Ramps per material</h3>
           </div>
           <div className='row' style={styles.rampsMaterialChart}>
-            <BarChart data={formattedRampMaterialChartData}/>
+            <BarChart 
+              data={formattedRampMaterialChartData}
+              xLabel={'Materials'}
+              yLabel={'Number of Ramps'}
+            />
           </div>
         </div>
         <div className="col-6 border">
-          Hello
+          <div className='row'>
+            <h3>Ramps per Size Category</h3>
+          </div> 
+          <div className='row' style={styles.rampsMaterialChart}>
+            <BarChart
+              data={formattedRampsSizeChartData}
+              xLabel={'Area (m^2)'}
+              yLabel={'Number of Ramps'}
+            />
+          </div>
         </div>
       </div>
     </div>

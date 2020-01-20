@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Dispatch } from 'react';
-import { IMapBounds, IGeoJSON } from '../constants/interfaces';
+import { IMapBounds, IGeoJSON, IRampsMaterial } from '../constants/interfaces';
 import { LatLngBounds } from 'leaflet';
 import { 
   FETCH_ALL_GEOJSON, 
@@ -74,6 +74,10 @@ export const getRampsPerSizeCategoryInBounds = (geoData: IGeoJSON, categories: n
     }
   });
   dispatch({type: GET_RAMPS_PER_SIZE_CATEGORY_IN_BOUNDS, payload: rampsPerSizeCategory})
+};
+
+export const getRampsForSelectMaterialInBounds = (rampMaterial: IRampsMaterial, dispatch: Dispatch<any>) => {
+  
 };
 
 export const fetchAllRampsPerMaterial = () => (dispatch: Dispatch<any>) => {
