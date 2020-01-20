@@ -3,12 +3,22 @@ export interface IMapProps {
 }
 
 export interface IState {
-  geoJson: IMapState
+  mapData: IMapState,
+  chartData: IChartState
 }
 
 export interface IMapState {
   boatRampsGeoJSON: IGeoJSON,
   mapBounds: IMapBounds
+}
+
+export interface IChartState {
+  rampsPerMaterial: {
+    [key: string]: number
+  },
+  rampsPerSizeCategory: {
+    [key: string]: number
+  }
 }
 
 export interface IGeoJSON extends GeoJSON.FeatureCollection{
@@ -20,4 +30,9 @@ export interface IMapBounds {
   west: number,
   north: number,
   east: number
+}
+
+export interface IRampsMaterial {
+  material: string,
+  ramps: number
 }

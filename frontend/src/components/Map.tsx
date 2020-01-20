@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import './Map.css';
 
@@ -12,8 +12,8 @@ const Map: React.FC = () => {
   const mapRef = useRef<any>(null);
 
   const mapPanTimeout = useRef<any>(null);
-  const boatRampData = useSelector((state: IState) => state.geoJson.boatRampsGeoJSON);
-  const currentBounds = useSelector((state: IState) => state.geoJson.mapBounds);
+  const boatRampData = useSelector((state: IState) => state.mapData.boatRampsGeoJSON);
+  const currentBounds = useSelector((state: IState) => state.mapData.mapBounds);
 
   useEffect(() => {
     const baseLayer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
@@ -23,7 +23,7 @@ const Map: React.FC = () => {
 
     mapRef.current = L.map('map', {
       center: [-28.0062, 153.4241],
-      zoom: 10,
+      zoom: 9,
       layers: [
         baseLayer
       ]
@@ -45,8 +45,6 @@ const Map: React.FC = () => {
 
   useEffect(() => {
     if (boatRampData.totalFeatures > 0) {
-      console.log('reloading map with geojson')
-      console.log(boatRampData)
       // Add GeoJSON data to leaflet map with popup
       L.geoJSON(boatRampData, {
         onEachFeature: function (feature, layer) {
@@ -77,24 +75,27 @@ const Map: React.FC = () => {
       north: latLngBounds.getNorthEast().lat,
       east: latLngBounds.getNorthEast().lng
     };
-    if (newBounds != currentBounds) {
+    if (newBounds !== currentBounds) {
       // if timeoutRef is set
       if(mapPanTimeout){
         // clear the setTimeout id if it was set.
         clearTimeout(mapPanTimeout.current);
       };
       mapPanTimeout.current = setTimeout(function() {
-        console.log('setting new bounds');
         dispatch(fetchRampsWithinBounds(latLngBounds));
         setMapBounds(newBounds, dispatch);
       }, interval);
-      console.log(mapPanTimeout.current);
     };
   };
 
   return (
+    <>
     <div id='map' style={styles.map}>
     </div>
+    <div className='row'>
+      Number of Ramps Visible - {boatRampData.totalFeatures}
+    </div>
+    </>
   );
 };
 
