@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import Map from './components/Map';
-import BarChart from './components/BarChart';
+import Map from './components/Map/Map';
+import MaterialChart from './components/MaterialChart/MaterialChart';
+import AreaChart from './components/AreaChart/AreaChart';
 
 import { theme } from './constants';
 
@@ -67,26 +68,26 @@ const App: React.FC = () => {
         </div>
       </div>
       <div className="row" style={styles.chartRow}>
-        <div className="col-6 border">
+        <div className="col-6">
           <div className='row'>
             <h3>Ramps per material</h3>
           </div>
           <div className='row' style={styles.rampsMaterialChart}>
-            <BarChart 
+            <MaterialChart 
               data={formattedRampMaterialChartData}
               xLabel={'Materials'}
               yLabel={'Number of Ramps'}
             />
           </div>
         </div>
-        <div className="col-6 border">
+        <div className="col-6" style={styles.areaChart}>
           <div className='row'>
             <h3>Ramps per Size Category</h3>
           </div> 
           <div className='row' style={styles.rampsMaterialChart}>
-            <BarChart
+            <AreaChart
               data={formattedRampsSizeChartData}
-              xLabel={'Area (m^2)'}
+              xLabel={'Area'}
               yLabel={'Number of Ramps'}
             />
           </div>
@@ -102,13 +103,16 @@ const styles = {
   container: {
     paddingLeft: theme.sizes.padding * 4,
     paddingRight: theme.sizes.padding * 4,
-    textAlign: 'center' as const
+    textAlign: 'center' as const,
   },
   mapRow: {
     paddingBottom: theme.sizes.padding
   },
   chartRow: {
     height: '600px'
+  },
+  areaChart: {
+
   },
   rampsMaterialChart: {
     height: '100%'

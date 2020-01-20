@@ -36,3 +36,8 @@ export interface IRampsMaterial {
   material: string,
   ramps: number
 }
+
+export interface IRampsArea {
+  area: string,
+  ramps: number
+}

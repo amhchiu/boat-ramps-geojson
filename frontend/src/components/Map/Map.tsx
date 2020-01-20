@@ -2,10 +2,10 @@ import React, { useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import './Map.css';
 
-import { fetchAllBoatRamps, setMapBounds, fetchRampsWithinBounds } from '../actions/actions';
+import { fetchAllBoatRamps, setMapBounds, fetchRampsWithinBounds } from '../../actions/actions';
 
 import L, { LatLngBounds } from 'leaflet';
-import { IState, IMapBounds } from '../constants/interfaces';
+import { IState, IMapBounds } from '../../constants/interfaces';
 
 const Map: React.FC = () => {
   const dispatch = useDispatch();

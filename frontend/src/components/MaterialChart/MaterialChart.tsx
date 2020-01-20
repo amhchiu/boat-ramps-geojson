@@ -1,8 +1,8 @@
 import React, { useRef, useEffect } from 'react';
 import { select, scaleLinear, axisLeft, scaleBand, axisBottom, max, selectAll } from 'd3';
-import { IState, IRampsMaterial } from '../constants/interfaces';
-import { theme } from '../constants'
-import './BarChart.css';
+import { IState, IRampsMaterial } from '../../constants/interfaces';
+import { theme } from '../../constants'
+import './MaterialChart.css';
 import { useDispatch } from 'react-redux';
 
 interface IProps {
@@ -13,33 +13,41 @@ interface IProps {
 
 const CHART_MARGIN = theme.sizes.padding * 4;
 const CHART_HEIGHT = 400;
-const CHART_WIDTH = 550;
+
+const getDivWidth = (id: string) => {
+  let el = document.getElementById(id);
+  return el ? el.clientWidth : 550;
+} 
+
+let CHART_WIDTH = 550;
+
 /**
  * TODO: 
  * - Number of ramps per construction material
  * - Number of ramps per size category (categories are areas in 3 different ranges [0,50], [50,200], [200,526])
  * @param props 
  */
-const BarChart = (props: IProps) => {
+const MaterialChart = (props: IProps) => {
 
   const { data, xLabel, yLabel } = props;
   const dispatch = useDispatch();
   const d3Container = useRef(null);
 
+
   useEffect(() => {
+
     if (data.length > 0) {
       let keys = Object.keys(data[0]);
       const xValueName = keys[0],
         yValueName = keys[1];
 
-      console.log(xValueName, yValueName);
       const svg = select(d3Container.current);
 
       // Remove old D3 elements
       svg.selectAll('*').remove();
 
       // group element. shift elements by margin. right down. 0,0 
-      const chart = svg.append('g').attr('transform', `translate(${CHART_MARGIN}, ${CHART_MARGIN})`);
+      const chart = svg.append('g').attr('transform', `translate(${CHART_WIDTH / 2}, ${CHART_HEIGHT / 4})`);
 
       /**
        * SVG coordinate system starts on top left! 
@@ -51,7 +59,7 @@ const BarChart = (props: IProps) => {
 
       // Band scale mapping.
       const xScale = scaleBand()
-        .domain(data.map((value: any ) => value[xValueName]))
+        .domain(data.map((value: any) => value[xValueName]))
         .range([0, CHART_WIDTH])
         .padding(0.25)
 
@@ -87,24 +95,25 @@ const BarChart = (props: IProps) => {
         .attr('y', -theme.sizes.padding * 2)
         .attr('transform', 'rotate(-90)')
         .attr('text-anchor', 'middle')
-        .text(xLabel);
+        .text(yLabel);
 
       chart.append('text')
         .attr('x', CHART_WIDTH / 2)
         .attr('y', CHART_HEIGHT + 40)
         .attr('text-anchor', 'middle')
-        .text(yLabel);
+        .text(xLabel);
     }
   }, [data]);
 
 
   const filterGeoDataWithSelection = (data: IRampsMaterial) => {
-
+    
   };
 
   return (
     <>
       <svg
+        id="material-chart"
         className="d3-barchart"
         width={'100%'}
         height={'100%'}
@@ -114,4 +123,4 @@ const BarChart = (props: IProps) => {
   )
 }
 
-export default BarChart;
+export default MaterialChart;
