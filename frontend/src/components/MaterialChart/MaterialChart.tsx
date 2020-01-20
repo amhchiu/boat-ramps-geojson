@@ -1,9 +1,11 @@
-import React, { useRef, useEffect } from 'react';
-import { select, scaleLinear, axisLeft, scaleBand, axisBottom, max, selectAll } from 'd3';
+import React, { useRef, useEffect, useState } from 'react';
+import { select, scaleLinear, axisLeft, scaleBand, axisBottom, max, selectAll, ascending } from 'd3';
 import { IState, IRampsMaterial } from '../../constants/interfaces';
 import { theme } from '../../constants'
 import './MaterialChart.css';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setSelectedMaterial, clearSelectedMaterial } from '../../actions/MapActions/mapActions';
+import { filterColourFromMaterialSelection } from '../utils';
 
 interface IProps {
   data: IRampsMaterial[],
@@ -17,7 +19,7 @@ const CHART_HEIGHT = 400;
 const getDivWidth = (id: string) => {
   let el = document.getElementById(id);
   return el ? el.clientWidth : 550;
-} 
+}
 
 let CHART_WIDTH = 550;
 
@@ -31,6 +33,8 @@ const MaterialChart = (props: IProps) => {
 
   const { data, xLabel, yLabel } = props;
   const dispatch = useDispatch();
+  const selectedMaterial = useSelector((state: IState) => state.mapData.selectedMaterial)
+  const [selectedBar, setSelectedBar] = useState();
   const d3Container = useRef(null);
 
 
@@ -40,6 +44,10 @@ const MaterialChart = (props: IProps) => {
       let keys = Object.keys(data[0]);
       const xValueName = keys[0],
         yValueName = keys[1];
+
+      data.sort((a: IRampsMaterial, b: IRampsMaterial) => {
+        return ascending(a.material, b.material);
+      });
 
       const svg = select(d3Container.current);
 
@@ -85,10 +93,17 @@ const MaterialChart = (props: IProps) => {
         .attr('y', (value: IRampsMaterial | any) => yScale(value[yValueName] as number))
         .attr('height', (value: IRampsMaterial | any) => CHART_HEIGHT - yScale(value[yValueName] as number))
         .attr('width', xScale.bandwidth())
-        .on('click', function (value: IRampsMaterial) {
-          console.log(value)
-          filterGeoDataWithSelection(value);
-        });
+        .on('click', function (value: IRampsMaterial, index: number) {
+          if (selectedMaterial === value.material) clearSelectedMaterial(dispatch);
+          else setSelectedMaterial(value.material, dispatch);
+        })
+        .each(function (value: IRampsMaterial) {
+          if (selectedMaterial === value.material) {
+            select(this).style('fill', filterColourFromMaterialSelection(value.material));
+          } else {
+            select(this).style('fill', 'steelblue');
+          }
+        })
 
       chart.append('text')
         .attr('x', -(CHART_HEIGHT / 2))
@@ -103,12 +118,7 @@ const MaterialChart = (props: IProps) => {
         .attr('text-anchor', 'middle')
         .text(xLabel);
     }
-  }, [data]);
-
-
-  const filterGeoDataWithSelection = (data: IRampsMaterial) => {
-    
-  };
+  }, [data, selectedMaterial]);
 
   return (
     <>

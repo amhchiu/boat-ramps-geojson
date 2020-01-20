@@ -5,7 +5,8 @@ import './Map.css';
 import { fetchAllBoatRamps, setMapBounds, fetchRampsWithinBounds } from '../../actions/actions';
 
 import L, { LatLngBounds } from 'leaflet';
-import { IState, IMapBounds } from '../../constants/interfaces';
+import { IState, IMapBounds, IGeoJSON } from '../../constants/interfaces';
+import { filterColourFromMaterialSelection } from '../utils';
 
 const Map: React.FC = () => {
   const dispatch = useDispatch();
@@ -14,6 +15,8 @@ const Map: React.FC = () => {
   const mapPanTimeout = useRef<any>(null);
   const boatRampData = useSelector((state: IState) => state.mapData.boatRampsGeoJSON);
   const currentBounds = useSelector((state: IState) => state.mapData.mapBounds);
+  const selectedMaterial = useSelector((state: IState) => state.mapData.selectedMaterial);
+  const selectedSizeCategory = useSelector((state: IState) => state.mapData.selectedSizeCategory);
 
   useEffect(() => {
     const baseLayer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
@@ -28,7 +31,7 @@ const Map: React.FC = () => {
         baseLayer
       ]
     });
-    
+
     // Fetch all ramp geodata. CHANGE TO FETCHING WITHIN BOUNDS !!!
     dispatch(fetchAllBoatRamps());
 
@@ -44,19 +47,55 @@ const Map: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    console.log(selectedMaterial);
     if (boatRampData.totalFeatures > 0) {
       // Add GeoJSON data to leaflet map with popup
       L.geoJSON(boatRampData, {
+        filter: function (feature) {
+          // neither selected
+          if (!selectedMaterial && !selectedSizeCategory) {
+            return true;
+          }
+          else if (selectedMaterial || selectedSizeCategory) {
+            return filterFeatureFromChartSelection(feature);
+          }
+          else return false;
+        },
         onEachFeature: function (feature, layer) {
           layer.bindPopup(buildPopup(feature), {
             maxHeight: 200,
             minWidth: 75,
             keepInView: true
           });
-        }
+        },
+        style: function (feature) {
+          let colour = '#0000FF';
+          if(selectedMaterial) colour = filterColourFromMaterialSelection(selectedMaterial);
+          return { color: colour }
+        },
       }).addTo(mapRef.current);
     }
-  }, [boatRampData]);
+  }, [boatRampData, selectedMaterial]);
+
+  const filterFeatureFromChartSelection = (feature: GeoJSON.Feature<GeoJSON.Geometry, any>) => {
+    let properties = feature.properties;
+    const { material, area_ } = properties;
+    // if material selected and feature has matching material
+    if (material === selectedMaterial) {
+      return true;
+    }
+    // if sizes selected and feature has area within sizes range
+    else if (selectedSizeCategory) {
+      console.log('size category')
+      let sizes = selectedSizeCategory.split('-');
+      let lower = parseInt(sizes[0]);
+      let upper = parseInt(sizes[1]);
+      if (area_ > lower && area_ <= upper) return true
+      else if (lower === 0 && lower === area_) return true;
+      else return false;
+    }
+    else return false
+  }
 
   const buildPopup = (feature: GeoJSON.Feature) => {
     let popupContent = '<table>';
@@ -77,11 +116,11 @@ const Map: React.FC = () => {
     };
     if (newBounds !== currentBounds) {
       // if timeoutRef is set
-      if(mapPanTimeout){
+      if (mapPanTimeout) {
         // clear the setTimeout id if it was set.
         clearTimeout(mapPanTimeout.current);
       };
-      mapPanTimeout.current = setTimeout(function() {
+      mapPanTimeout.current = setTimeout(function () {
         dispatch(fetchRampsWithinBounds(latLngBounds));
         setMapBounds(newBounds, dispatch);
       }, interval);
@@ -90,11 +129,11 @@ const Map: React.FC = () => {
 
   return (
     <>
-    <div id='map' style={styles.map}>
-    </div>
-    <div className='row'>
-      Number of Ramps Visible - {boatRampData.totalFeatures}
-    </div>
+      <div id='map' style={styles.map}>
+      </div>
+      <div className='row'>
+        Number of Ramps Visible - {boatRampData.totalFeatures}
+      </div>
     </>
   );
 };

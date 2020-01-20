@@ -9,7 +9,9 @@ export interface IState {
 
 export interface IMapState {
   boatRampsGeoJSON: IGeoJSON,
-  mapBounds: IMapBounds
+  mapBounds: IMapBounds,
+  selectedMaterial: string,
+  selectedSizeCategory: string
 }
 
 export interface IChartState {

@@ -1,11 +1,13 @@
 import { combineReducers } from 'redux';
-import { IMapState } from "../constants/interfaces";
+import { IMapState, IChartState } from "../constants/interfaces";
 import { 
   FETCH_GEOJSON_IN_BOUNDS,
   FETCH_ALL_GEOJSON,
   UPDATE_MAP_BOUNDS,
   GET_RAMPS_MATERIALS_IN_BOUNDS,
-  GET_RAMPS_PER_SIZE_CATEGORY_IN_BOUNDS
+  GET_RAMPS_PER_SIZE_CATEGORY_IN_BOUNDS,
+  UPDATE_SELECTED_MATERIAL,
+  CLEAR_SELECTED_MATERIAL
 
 } from '../actions/actionTypes';
 
@@ -20,10 +22,12 @@ const mapState: IMapState = {
     west: 0,
     south: 0,
     east: 0
-  }
+  },
+  selectedMaterial: '',
+  selectedSizeCategory: ''
 };
 
-const chartState: any = {
+const chartState: IChartState = {
   rampsPerMaterial: {},
   rampsPerSizeCategory: {}
 }
@@ -41,12 +45,17 @@ const geoJsonReducer = (state: IMapState = mapState, action: any) => {
       }}
     case UPDATE_MAP_BOUNDS:
       return {...state, mapBounds: action.payload};
+    case UPDATE_SELECTED_MATERIAL:
+      console.log(action.payload);
+      return {...state, selectedMaterial: action.payload};
+    case CLEAR_SELECTED_MATERIAL: 
+      return {...state, selectedMaterial: ''};
     default: 
       return state;
   }
 };
 
-const chartDataReducer = (state: IMapState = chartState, action: any) => {
+const chartDataReducer = (state: IChartState = chartState, action: any) => {
   switch(action.type){
     case GET_RAMPS_MATERIALS_IN_BOUNDS:
       return {...state, rampsPerMaterial: action.payload};

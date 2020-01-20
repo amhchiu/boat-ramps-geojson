@@ -1,12 +1,12 @@
 import React, { useRef, useEffect } from 'react';
-import { select, scaleLinear, axisLeft, scaleBand, axisBottom, max, selectAll } from 'd3';
-import { IState, IRampsMaterial } from '../../constants/interfaces';
+import { select, scaleLinear, axisLeft, scaleBand, axisBottom, max, selectAll, ascending } from 'd3';
+import { IState, IRampsArea } from '../../constants/interfaces';
 import { theme } from '../../constants'
 import './AreaChart.css';
 import { useDispatch } from 'react-redux';
 
 interface IProps {
-  data: IRampsMaterial[],
+  data: IRampsArea[],
   xLabel: string,
   yLabel: string
 }
@@ -32,7 +32,15 @@ const BarChart = (props: IProps) => {
       let keys = Object.keys(data[0]);
       const xValueName = keys[0],
         yValueName = keys[1];
-
+      
+        
+      data.sort((a: IRampsArea, b: IRampsArea) => {
+        let a1 = a.area.split('-');
+        let b1 = b.area.split('-');
+        if (parseInt(b1[0]) > parseInt(a1[0])) return -1;
+        else return 1;
+      });
+      
       const svg = select(d3Container.current);
 
       // Remove old D3 elements
@@ -55,6 +63,8 @@ const BarChart = (props: IProps) => {
         .range([0, CHART_WIDTH])
         .padding(0.25)
 
+
+      console.log(xScale.domain())
       // Add new group element yaxis to chart element
       chart.append('g')
         .call(axisLeft(yScale));
@@ -73,11 +83,11 @@ const BarChart = (props: IProps) => {
         .data(data)
         .enter()
         .append('rect')
-        .attr('x', (value: IRampsMaterial | any) => xScale(value[xValueName]) as number)
-        .attr('y', (value: IRampsMaterial | any) => yScale(value[yValueName] as number))
-        .attr('height', (value: IRampsMaterial | any) => CHART_HEIGHT - yScale(value[yValueName] as number))
+        .attr('x', (value: IRampsArea | any) => xScale(value[xValueName]) as number)
+        .attr('y', (value: IRampsArea | any) => yScale(value[yValueName] as number))
+        .attr('height', (value: IRampsArea | any) => CHART_HEIGHT - yScale(value[yValueName] as number))
         .attr('width', xScale.bandwidth())
-        .on('click', function (value: IRampsMaterial) {
+        .on('click', function (value: IRampsArea) {
           console.log(value)
           filterGeoDataWithSelection(value);
         });
@@ -99,7 +109,7 @@ const BarChart = (props: IProps) => {
   }, [data]);
 
 
-  const filterGeoDataWithSelection = (data: IRampsMaterial) => {
+  const filterGeoDataWithSelection = (data: IRampsArea) => {
 
   };
 
