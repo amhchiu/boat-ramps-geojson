@@ -6,6 +6,10 @@ import { getGeoDataInBounds, getRampsPerMaterial, getRampsPerSizeCategory } from
 
 const boatRampGeoJSON = JSON.parse(fs.readFileSync('./data/boat_ramps.geojson', 'utf8'));
 
+/**
+ * UNUSED !!!
+ * GET all the Boat Ramp GeoJSON Data
+ */
 router.get('/data', (req: any, res: any) => {
   res.json(boatRampGeoJSON);
 });
