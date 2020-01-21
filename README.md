@@ -28,5 +28,5 @@ Visualisation of boat ramps in Australia's Gold Coast.
 There are a few unit tests on the redux actions which can be run with `yarn test`.
 
 TO DO:
-- Write unit tests for the component functions
+- Continue writing unit tests for the component functions
 - Style the Map and Chart to be responsive.
