@@ -10,6 +10,8 @@ import { IState, IRampsMaterial } from './constants/interfaces';
 import { useSelector, useDispatch } from 'react-redux';
 import { getRampsPerMaterialInBounds, getRampsPerSizeCategoryInBounds } from './actions/actions';
 
+import config from './FrontEndConfig.json';
+
 const App: React.FC = () => {
 
   const dispatch = useDispatch();
@@ -19,13 +21,12 @@ const App: React.FC = () => {
   const boatRampData = useSelector((state: IState) => state.mapData.boatRampsGeoJSON);
   const rampsPerMaterialData = useSelector((state: IState) => state.chartData.rampsPerMaterial);
   const rampsPerSizeCategoryData = useSelector((state: IState) => state.chartData.rampsPerSizeCategory);
-  const areaCategories = [50, 200, 526];
+  const areaCategories = config.AreaSizeCategories;
 
   useEffect(() => {
-    console.log('updating ramps per materials')
     if (boatRampData.totalFeatures > 0) {
-      getRampsPerMaterialInBounds(boatRampData, dispatch);
-      getRampsPerSizeCategoryInBounds(boatRampData, areaCategories, dispatch);
+      dispatch(getRampsPerMaterialInBounds(boatRampData));
+      dispatch(getRampsPerSizeCategoryInBounds(boatRampData, areaCategories));
     }
   }, [boatRampData]);
 

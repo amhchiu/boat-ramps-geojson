@@ -15,7 +15,6 @@ router.get('/data', (req: any, res: any) => {
  * /data/filter?southWest=52.1,-152.3&northEast=53.1,-154.2
  */
 router.get('/data/filter', function (req: any, res: any) {
-    console.log('request to filter')
     let southWest = req.query.southWest.split(',');
     let northEast = req.query.northEast.split(',');
     let latMin = parseFloat(southWest[0]),
@@ -43,7 +42,6 @@ router.get('/data/materials-ramps', (req: any, res: any) => {
 router.get('/data/ramps-per-size', (req: any, res: any) => {
   let categoriesQuery = req.query.categories.split(',');
   let categories = categoriesQuery.map((n: string) => parseInt(n));
-  console.log(categories);
   let rampsPerSizeCategory = getRampsPerSizeCategory(boatRampGeoJSON, categories);
   res.json(rampsPerSizeCategory);
 });

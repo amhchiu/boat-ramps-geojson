@@ -1,4 +1,4 @@
-import { IGeoJSON, IRampsMaterial, IRampsSizeCategory } from '../interfaces';
+import { IGeoJSON, IRampsMaterial } from '../interfaces';
 
 // s w n e
 export const getGeoDataInBounds = (latMin: number, lngMin: number, latMax: number, lngMax: number, geoData: IGeoJSON) => {

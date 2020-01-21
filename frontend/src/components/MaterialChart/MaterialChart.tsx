@@ -93,11 +93,11 @@ const MaterialChart = (props: IProps) => {
         .attr('width', xScale.bandwidth())
         .on('click', function (value: IRampsMaterial, index: number) {
           if (selectedMaterial === value.material) {
-            clearSelectedMaterial(dispatch);
+            dispatch(clearSelectedMaterial());
           }
           else {
-            clearSelectedSizeCategory(dispatch);
-            setSelectedMaterial(value.material, dispatch);
+            dispatch(clearSelectedSizeCategory());
+            dispatch(setSelectedMaterial(value.material));
           }
         })
         .each(function (value: IRampsMaterial) {

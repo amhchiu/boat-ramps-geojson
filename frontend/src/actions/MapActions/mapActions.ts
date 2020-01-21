@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Dispatch } from 'react';
-import { IMapBounds } from '../../constants/interfaces';
+import { IMapBounds, IGeoJSON } from '../../constants/interfaces';
 import { LatLngBounds } from 'leaflet';
 import { 
   FETCH_ALL_GEOJSON, 
@@ -8,27 +8,41 @@ import {
   FETCH_GEOJSON_IN_BOUNDS,
   UPDATE_SELECTED_MATERIAL,
   CLEAR_SELECTED_MATERIAL,
-  UPDATE_TOTAL_FEATURES,
   UPDATE_SELECTED_SIZECAT,
   CLEAR_SELECTED_SIZECAT
 } from '../actionTypes';
 
-const baseURL = 'http://localhost:8080';
+import config from '../../FrontEndConfig.json';
 
-export const fetchAllBoatRamps = () => (dispatch: Dispatch<any>) => {
+const baseURL = config.ServerURL;
+
+const fetchAllBoatRampsSuccess = (geoData: IGeoJSON) => (
+  {type: FETCH_ALL_GEOJSON, payload: geoData}
+)
+
+const setMapBoundsSuccess = (newBounds: IMapBounds) => (
+  {type: UPDATE_MAP_BOUNDS, payload: newBounds}
+);
+
+const fetchRampsWithinBoundsSuccess = (features: GeoJSON.Feature[]) => (
+  {type: FETCH_GEOJSON_IN_BOUNDS, payload: features}
+)
+
+export const fetchAllBoatRamps = (): any => (dispatch: Dispatch<any>) => {
   const url = `${baseURL}/data`;
   return axios.get(url)
     .then(({data}) => {
-      dispatch({type: FETCH_ALL_GEOJSON, payload: data})
+      const geoData: IGeoJSON = data;
+      dispatch(fetchAllBoatRampsSuccess(geoData))
     })
     .catch(err => console.error(err));
 }
 
-export const setMapBounds = (newBounds: IMapBounds, dispatch: Dispatch<any>) => {
-  dispatch({type: UPDATE_MAP_BOUNDS, payload: newBounds});
+export const setMapBounds = (newBounds: IMapBounds): any => (dispatch: Dispatch<any>) => {
+  dispatch(setMapBoundsSuccess(newBounds));
 }
 
-export const fetchRampsWithinBounds = (latLngBounds: LatLngBounds) => (dispatch: Dispatch<any>) => {
+export const fetchRampsWithinBounds = (latLngBounds: LatLngBounds): any => (dispatch: Dispatch<any>) => {
   const newBounds: IMapBounds = {
     south: latLngBounds.getSouthWest().lat,
     west: latLngBounds.getSouthWest().lng,
@@ -39,32 +53,24 @@ export const fetchRampsWithinBounds = (latLngBounds: LatLngBounds) => (dispatch:
   const url = `${baseURL}/data/filter?southWest=${south},${west}&northEast=${north},${east}`;
   return axios.get(url)
     .then(({data}) => {
-      const payload = {
-        totalFeatures: data.length,
-        features: data
-      };
-      dispatch({type: FETCH_GEOJSON_IN_BOUNDS, payload})
+      const features: GeoJSON.Feature[] = data;
+      dispatch(fetchRampsWithinBoundsSuccess(features))
     })
     .catch(err => console.error(err)); 
 };
 
-export const setSelectedMaterial = (material: string, dispatch: Dispatch<any>) => {
+export const setSelectedMaterial = (material: string): any => (dispatch: Dispatch<any>) => {
   dispatch({type: UPDATE_SELECTED_MATERIAL, payload: material});
 }
 
-export const clearSelectedMaterial = (dispatch: Dispatch<any>) => {
+export const clearSelectedMaterial = (): any => (dispatch: Dispatch<any>) => {
   dispatch({type: CLEAR_SELECTED_MATERIAL});
 }
 
-export const setSelectedSizeCategory = (sizeCategory: string, dispatch: Dispatch<any>) => {
+export const setSelectedSizeCategory = (sizeCategory: string): any => (dispatch: Dispatch<any>) => {
   dispatch({type: UPDATE_SELECTED_SIZECAT, payload: sizeCategory});
 };
 
-export const clearSelectedSizeCategory = (dispatch: Dispatch<any>) => {
+export const clearSelectedSizeCategory = (): any => (dispatch: Dispatch<any>) => {
   dispatch({type: CLEAR_SELECTED_SIZECAT});
 };
-
-export const setTotalFeatures = (total: number, dispatch: Dispatch<any>) => {
-  console.log('updateing total'+total)
-  dispatch({type: UPDATE_TOTAL_FEATURES, payload: total});
-}

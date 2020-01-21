@@ -1,7 +1,3 @@
-export interface IMapProps {
-
-}
-
 export interface IState {
   mapData: IMapState,
   chartData: IChartState
@@ -23,7 +19,11 @@ export interface IChartState {
   }
 }
 
-export interface IGeoJSON extends GeoJSON.FeatureCollection{
+export interface IFeature extends GeoJSON.Feature {
+  geometry_name?: string
+}
+
+export interface IGeoJSON extends GeoJSON.FeatureCollection {
   totalFeatures: number
 }
 

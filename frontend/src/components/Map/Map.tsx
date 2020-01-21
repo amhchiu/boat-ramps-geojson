@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import './Map.css';
-
+import config from '../../FrontEndConfig.json'
 import { fetchAllBoatRamps, setMapBounds, fetchRampsWithinBounds } from '../../actions/actions';
 
-import L, { LatLngBounds, featureGroup } from 'leaflet';
-import { IState, IMapBounds, IGeoJSON } from '../../constants/interfaces';
+import L, { LatLngBounds, LatLng, latLng } from 'leaflet';
+import { IState, IMapBounds } from '../../constants/interfaces';
 import { filterColourFromMaterialSelection, filterColourFromSizeCategorySelection } from '../utils';
-import { setTotalFeatures } from '../../actions/MapActions/mapActions';
 
 const Map: React.FC = () => {
   const dispatch = useDispatch();
@@ -25,9 +24,9 @@ const Map: React.FC = () => {
       attribution:
         '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
     });
-
+    const mapCenter = latLng(config.MapCenter[0], config.MapCenter[1]);
     mapRef.current = L.map('map', {
-      center: [-28.0062, 153.4241],
+      center: mapCenter,
       zoom: 9,
       layers: [
         baseLayer
@@ -44,7 +43,7 @@ const Map: React.FC = () => {
     // bind map panning to updating the view bounds in state
     mapInstance.on('moveend', () => {
       let latLngBounds = mapInstance.getBounds();
-      updateBounds(latLngBounds, 1000);
+      updateBounds(latLngBounds, config.MapRefreshDelay);
     });
   }, []);
 
@@ -135,7 +134,7 @@ const Map: React.FC = () => {
       };
       mapPanTimeout.current = setTimeout(function () {
         dispatch(fetchRampsWithinBounds(latLngBounds));
-        setMapBounds(newBounds, dispatch);
+        dispatch(setMapBounds(newBounds));
       }, interval);
     };
   };

@@ -1,0 +1,6 @@
+{
+  "ServerURL": "http://localhost:8080",
+  "MapRefreshDelay": 500,
+  "AreaSizeCategories": [50, 200, 526],
+  "MapCenter": [-28.0062, 153.4241]
+}

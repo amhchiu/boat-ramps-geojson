@@ -90,10 +90,10 @@ const BarChart = (props: IProps) => {
         .on('click', function (value: IRampsArea) {
           console.log(selectedSizeCategory);
           console.log(value.area);
-          if (selectedSizeCategory == value.area) clearSelectedSizeCategory(dispatch);
+          if (selectedSizeCategory == value.area) dispatch(clearSelectedSizeCategory());
           else {
-            clearSelectedMaterial(dispatch);
-            setSelectedSizeCategory(value.area, dispatch);
+            dispatch(clearSelectedMaterial());
+            dispatch(setSelectedSizeCategory(value.area));
           }
         })
         .each(function (value: IRampsArea) {

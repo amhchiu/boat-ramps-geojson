@@ -1,55 +1,56 @@
 import { Dispatch } from 'react';
-import { IGeoJSON, IRampsMaterial } from '../../constants/interfaces';
-import { 
+import { IGeoJSON } from '../../constants/interfaces';
+import {
   GET_RAMPS_MATERIALS_IN_BOUNDS,
   GET_RAMPS_PER_SIZE_CATEGORY_IN_BOUNDS
 } from '../actionTypes';
 
-const baseURL = 'http://localhost:8080';
+interface IGetRampsPerXInBoundsSuccess {
+  type: string,
+  payload: { [key: string]: number }
+}
 
-export const getRampsPerMaterialInBounds = (geoData: IGeoJSON, dispatch: Dispatch<any>) => {
+export const getRampsPerMaterialInBoundsSuccess = (rampsPerMaterial: { [key: string]: number }): IGetRampsPerXInBoundsSuccess => ({
+  type: GET_RAMPS_MATERIALS_IN_BOUNDS,
+  payload: rampsPerMaterial
+});
+
+export const getRampsPerSizeCategoryInBoundsSuccess = (rampsPerSizeCategory: { [key: string]: number }) => ({
+  type: GET_RAMPS_PER_SIZE_CATEGORY_IN_BOUNDS, 
+  payload: rampsPerSizeCategory
+});
+
+/**
+ * From the GeoJSON, get the number of ramps for each material. 
+ * @param geoData - GeoJSON data 
+ * @param dispatch 
+ */
+export const getRampsPerMaterialInBounds = (geoData: IGeoJSON): any => (dispatch: Dispatch<IGetRampsPerXInBoundsSuccess>) => {
   const features = geoData.features;
-  let rampsPerMaterial: {[key: string]: number} = {};
+  let rampsPerMaterial: { [key: string]: number } = {};
   features.forEach((feature: GeoJSON.Feature) => {
-    if(feature.properties){
+    if (feature.properties) {
       const material = feature.properties.material;
       rampsPerMaterial[material] = (rampsPerMaterial[material] || 0) + 1;
     };
   });
-  dispatch({type: GET_RAMPS_MATERIALS_IN_BOUNDS, payload: rampsPerMaterial})
+  return dispatch(getRampsPerMaterialInBoundsSuccess(rampsPerMaterial));
 }
 
-export const getRampsPerSizeCategoryInBounds = (geoData: IGeoJSON, categories: number[], dispatch: Dispatch<any>) => {
+export const getRampsPerSizeCategoryInBounds = (geoData: IGeoJSON, categories: number[]): any => (dispatch: Dispatch<IGetRampsPerXInBoundsSuccess>) => {
   const features = geoData.features;
-  let rampsPerSizeCategory: {[key: string]: number} = {};
-  
+  let rampsPerSizeCategory: { [key: string]: number } = {};
+
   features.forEach((feature: GeoJSON.Feature) => {
-    if(feature.properties && categories.length > 0){
+    if (feature.properties && categories.length > 0) {
       const area = feature.properties.area_;
-      for(let i = 0; i < categories.length; i++){
+      for (let i = 0; i < categories.length; i++) {
         let upper = categories[i];
-        let lower = i === 0 ?  0 : categories[i-1];
-        if(area > lower && area <= upper) rampsPerSizeCategory[`${lower}-${upper}`] = (rampsPerSizeCategory[`${lower}-${upper}`] || 0) + 1;
-        else if(i === 0 && area === 0) rampsPerSizeCategory[`${lower}-${upper}`] = (rampsPerSizeCategory[`${lower}-${upper}`] || 0) + 1;
+        let lower = i === 0 ? 0 : categories[i - 1];
+        if (area > lower && area <= upper) rampsPerSizeCategory[`${lower}-${upper}`] = (rampsPerSizeCategory[`${lower}-${upper}`] || 0) + 1;
+        else if (i === 0 && area === 0) rampsPerSizeCategory[`${lower}-${upper}`] = (rampsPerSizeCategory[`${lower}-${upper}`] || 0) + 1;
       }
     }
   });
-  dispatch({type: GET_RAMPS_PER_SIZE_CATEGORY_IN_BOUNDS, payload: rampsPerSizeCategory})
-};
-
-export const getRampsForSelectMaterialInBounds = (rampMaterial: IRampsMaterial, dispatch: Dispatch<any>) => {
-  
-};
-
-export const fetchAllRampsPerMaterial = () => (dispatch: Dispatch<any>) => {
-
-};
-
-export const fetchAllRampsPerSizeCategory = (category: number[]) => {
-
-};
-
-export const fetchRampMaterialChartData = () => (dispatch: Dispatch<any>) => {
-  
-  const url = `${baseURL}/data/ramps-per-size?categories=`
+  dispatch(getRampsPerSizeCategoryInBoundsSuccess(rampsPerSizeCategory))
 };
