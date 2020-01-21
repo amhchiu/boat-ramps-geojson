@@ -18,12 +18,15 @@ Visualisation of boat ramps in Australia's Gold Coast.
   - `yarn install`
   - `yarn start`
   
- #### Features
+ #### Usage tips
  - Panning and zooming on the map will only GET and display the boat ramps that fit within the visible map bounds.
  - There are two bar charts: Number or ramps per construction material and number of ramps per size category.
  - Panning and zooming will also update the bar chart values.
  - Clicking on a bar will change its colour and filter the markers on the map match the data of the selected bar. This can be toggled.
-
+A few map properties can be configured in `frontend/src/FrontendConfig.json` including:
+- How fast the map updates the markers after panning (milliseconds)
+- Area size category range. Can add more or less to change the bar chart. These are the upper bounds.
+- Map Center Lat, Lng.
  
 There are a few unit tests on the redux actions which can be run with `yarn test`.
 
