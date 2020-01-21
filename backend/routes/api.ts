@@ -15,6 +15,7 @@ router.get('/data', (req: any, res: any) => {
 });
 
 /**
+ * Filters the data based on maximum and minimum latlng coordinates
  * /data/filter?southWest=52.1,-152.3&northEast=53.1,-154.2
  */
 router.get('/data/filter', function (req: any, res: any) {

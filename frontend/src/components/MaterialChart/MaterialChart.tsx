@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { select, scaleLinear, axisLeft, scaleBand, axisBottom, max, selectAll, ascending } from 'd3';
+import { select, scaleLinear, axisLeft, scaleBand, axisBottom, max, ascending } from 'd3';
 import { IState, IRampsMaterial } from '../../constants/interfaces';
 import { theme } from '../../constants'
 import { useDispatch, useSelector } from 'react-redux';
@@ -31,7 +31,7 @@ const MaterialChart = (props: IProps) => {
   const d3Container = useRef(null);
 
   /**
-   * 
+   * Builds the d3 SVG bar chart from the ramps per material data from the Props
    */
   useEffect(() => {
     if (data.length > 0) {
@@ -50,11 +50,8 @@ const MaterialChart = (props: IProps) => {
 
       // group element. shift elements by margin. right down. 0,0 
       const chart = svg.append('g').attr('transform', `translate(${CHART_WIDTH / 2}, ${CHART_HEIGHT / 4})`);
-
-      /**
-       * SVG coordinate system starts on top left! 
-       * Map max to 
-       *  */
+      
+      // svg
       const yScale = scaleLinear()
         .domain([max(data, d => d.ramps) as number, 0])
         .range([0, CHART_HEIGHT]);
@@ -69,15 +66,22 @@ const MaterialChart = (props: IProps) => {
       chart.append('g')
         .call(axisLeft(yScale));
 
+      /* svg translate is (down, right).
+         Move x-axis to bottom (chart-height) of chart */  
       chart.append('g')
         .attr('transform', `translate(0, ${CHART_HEIGHT})`)
         .call(axisBottom(xScale));
 
-      /**
+      /*
        * selectAll elements -> empty []
        * data(): elements in DOM to be updated based on data.length
        * enter(): identifies missing elements
        * attr: add rectangle for every element of array
+       * Select all the chart elements; and for each coordinate in the data
+       * append a rectangle element with x and y values determined by the
+       * xScale and yScale functions maps given domain value to the svg range
+       * clicking a bar dispatches the selected material to store. reclick to clear selection.
+       * Colour the bar based on selection
        */
       chart.selectAll()
         .data(data)
@@ -87,7 +91,7 @@ const MaterialChart = (props: IProps) => {
         .attr('y', (value: IRampsMaterial | any) => yScale(value[yValueName] as number))
         .attr('height', (value: IRampsMaterial | any) => CHART_HEIGHT - yScale(value[yValueName] as number))
         .attr('width', xScale.bandwidth())
-        .on('click', function (value: IRampsMaterial, index: number) {
+        .on('click', function (value: IRampsMaterial) {
           if (selectedMaterial === value.material) {
             dispatch(clearSelectedMaterial());
           }
@@ -102,7 +106,7 @@ const MaterialChart = (props: IProps) => {
           } else {
             select(this).style('fill', 'steelblue');
           }
-        })
+        });
 
       chart.append('text')
         .attr('x', -(CHART_HEIGHT / 2))
