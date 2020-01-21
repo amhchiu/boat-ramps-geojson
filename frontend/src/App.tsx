@@ -6,7 +6,7 @@ import AreaChart from './components/AreaChart/AreaChart';
 import { theme } from './constants';
 
 import './App.css';
-import { IState, IRampsMaterial } from './constants/interfaces';
+import { IState, IRampsMaterial, IRampsArea } from './constants/interfaces';
 import { useSelector, useDispatch } from 'react-redux';
 import { getRampsPerMaterialInBounds, getRampsPerSizeCategoryInBounds } from './actions/actions';
 
@@ -16,13 +16,19 @@ const App: React.FC = () => {
 
   const dispatch = useDispatch();
   const [formattedRampMaterialChartData, setFormattedRampMaterialChartData] = useState<IRampsMaterial[]>([]);
-  const [formattedRampsSizeChartData, setFormattedRampsSizeChartData] = useState<any>([]);
+  const [formattedRampsSizeChartData, setFormattedRampsSizeChartData] = useState<IRampsArea[]>([]);
 
   const boatRampData = useSelector((state: IState) => state.mapData.boatRampsGeoJSON);
   const rampsPerMaterialData = useSelector((state: IState) => state.chartData.rampsPerMaterial);
   const rampsPerSizeCategoryData = useSelector((state: IState) => state.chartData.rampsPerSizeCategory);
+
+  // array of area size categories used by the Ramps per Size Category bar chart. 
   const areaCategories = config.AreaSizeCategories;
 
+  /**
+   * Every time the Map data changes, this fetches and updates 
+   * the chart data in the store.
+   */
   useEffect(() => {
     if (boatRampData.totalFeatures > 0) {
       dispatch(getRampsPerMaterialInBounds(boatRampData));
@@ -30,6 +36,12 @@ const App: React.FC = () => {
     }
   }, [boatRampData]);
 
+  /**
+   * Every time the ramps per material data in global store changes
+   * such as from the above useEffect; this will
+   * create a formatted array of [{x: x1, y: y1},...] values
+   * used by the d3 bar chart (kept in Local State);
+   */
   useEffect(() => {
     if (Object.entries(rampsPerMaterialData).length > 0){
       let barChartData = [];
@@ -42,7 +54,12 @@ const App: React.FC = () => {
       setFormattedRampMaterialChartData(barChartData);
     }
   }, [rampsPerMaterialData]);
-
+  
+  /**
+   * Every time the ramps per size category data in global store changes,
+   * this creates a formatted array of [{x: x1, y: y1},...] values
+   * used by the d3 bar chart (kept in Local State)
+   */
   useEffect(() => {
     if (Object.entries(rampsPerSizeCategoryData).length > 0){
       let barChartData = [];

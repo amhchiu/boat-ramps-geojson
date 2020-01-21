@@ -1,13 +1,21 @@
 import { IGeoJSON, IRampsMaterial } from '../interfaces';
 
-// s w n e
+/**
+ * Returns the filtered array of GeoJSON Features within the
+ * provided rectangular bounds. 
+ * @param latMin Min Latitude
+ * @param lngMin Min Longitude
+ * @param latMax Max Latitude
+ * @param lngMax Mat Longitude
+ * @param geoData GeoJSON Boat Ramp data
+ */
 export const getGeoDataInBounds = (latMin: number, lngMin: number, latMax: number, lngMax: number, geoData: IGeoJSON) => {
   let filteredGeoData = geoData.features.filter((feature: GeoJSON.Feature) => {
     let isValid = false;
     const geometry = feature.geometry;
     if (geometry.type === 'MultiPolygon') {
       const coordinates = geometry.coordinates;
-      // LngLat instead of LatLng 
+      // LngLat instead of LatLng!!
       const [[lngLatArray]] = coordinates;
       lngLatArray.forEach(lngLat => {
         let [lng, lat] = lngLat;
@@ -22,6 +30,12 @@ export const getGeoDataInBounds = (latMin: number, lngMin: number, latMax: numbe
   return filteredGeoData
 };
 
+/**
+ * UNUSED !!!
+ * Returns an object of material type and number of associated ramps
+ * i.e. {Concrete: 120, Gravel: 20}
+ * @param geoData GeoJSON Boat Ramp data
+ */
 export const getRampsPerMaterial = (geoData: IGeoJSON) => {
   const features = geoData.features;
   let rampsPerMaterial: IRampsMaterial = {};
@@ -34,6 +48,15 @@ export const getRampsPerMaterial = (geoData: IGeoJSON) => {
   return rampsPerMaterial;
 }
 
+/**
+ * UNUSED !!!
+ * Returns an object of Size Categories i.e. 0-50 
+ * and the number of associated ramps
+ * e.g. {0-50: 123, 50-200: 12: 200-526: 40}
+ * @param geoData GeoJSON Boat Ramp data
+ * @param categories Array of Area Categories. 
+ * arr[i] = upper area bound; arr[i-1] = lower area bound.
+ */
 export const getRampsPerSizeCategory = (geoData: IGeoJSON, categories: number[]) => {
   const features = geoData.features;
   let rampsPerSizeCategory: IRampsMaterial = {};

@@ -3,7 +3,6 @@ const router = express.Router();
 import fs from 'fs';
 
 import { getGeoDataInBounds, getRampsPerMaterial, getRampsPerSizeCategory } from '../processing';
-import { IRampsMaterial } from '../interfaces';
 
 const boatRampGeoJSON = JSON.parse(fs.readFileSync('./data/boat_ramps.geojson', 'utf8'));
 
@@ -26,8 +25,8 @@ router.get('/data/filter', function (req: any, res: any) {
 });
 
 
-
 /**
+ * UNUSED !!!
  * Get all materials and number of ramps
  */
 router.get('/data/materials-ramps', (req: any, res: any) => {
@@ -36,6 +35,7 @@ router.get('/data/materials-ramps', (req: any, res: any) => {
 });
 
 /**
+ * UNUSED !!!
  * Get number of ramps per categories provided in query
  * e.g. /data/ramps-per-size?categories=50,200,526
  */

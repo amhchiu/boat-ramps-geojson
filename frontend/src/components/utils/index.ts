@@ -31,9 +31,12 @@ export const filterColourFromMaterialSelection = (material: string) => {
   return newColour;
 }
 
+/**
+ * Returns the colour associated with a size category
+ * @param sizeCategory size category property which the boat ramp area may fall under.
+ */
 export const filterColourFromSizeCategorySelection = (sizeCategory: string) => {
   let newColour = '';
-  console.log(sizeCategory)
   switch (sizeCategory) {
     case '0-50':
       newColour = 'salmon';

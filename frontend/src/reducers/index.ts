@@ -68,10 +68,8 @@ const geoJsonReducer = (state: IMapState = mapState, action: any) => {
 const chartDataReducer = (state: IChartState = chartState, action: any) => {
   switch(action.type){
     case GET_RAMPS_MATERIALS_IN_BOUNDS:
-      console.log(action.payload);
       return {...state, rampsPerMaterial: action.payload};
     case GET_RAMPS_PER_SIZE_CATEGORY_IN_BOUNDS:
-      console.log(action.payload)
       return {...state, rampsPerSizeCategory: action.payload};
     default:
       return state;

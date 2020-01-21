@@ -13,22 +13,17 @@ interface IProps {
   yLabel: string
 }
 
-const CHART_MARGIN = theme.sizes.padding * 4;
 const CHART_HEIGHT = 400;
-
-const getDivWidth = (id: string) => {
-  let el = document.getElementById(id);
-  return el ? el.clientWidth : 550;
-}
-
-let CHART_WIDTH = 550;
-
+const CHART_WIDTH = 550;
 /**
- * TODO: 
- * - Number of ramps per construction material
- * - Number of ramps per size category (categories are areas in 3 different ranges [0,50], [50,200], [200,526])
- * @param props 
+ * Calculate the width of the browser window so we can position
+ * the chart in the center of its div
  */
+// const getDivWidth = (id: string) => {
+//   let el = document.getElementById(id);
+//   return el ? el.clientWidth : 550;
+// }
+
 const MaterialChart = (props: IProps) => {
 
   const { data, xLabel, yLabel } = props;
@@ -36,8 +31,10 @@ const MaterialChart = (props: IProps) => {
   const selectedMaterial = useSelector((state: IState) => state.mapData.selectedMaterial)
   const d3Container = useRef(null);
 
+  /**
+   * 
+   */
   useEffect(() => {
-
     if (data.length > 0) {
       let keys = Object.keys(data[0]);
       const xValueName = keys[0],

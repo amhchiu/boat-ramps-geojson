@@ -13,7 +13,6 @@ interface IProps {
   yLabel: string
 }
 
-const CHART_MARGIN = theme.sizes.padding * 4;
 const CHART_HEIGHT = 400;
 const CHART_WIDTH = 550;
 
