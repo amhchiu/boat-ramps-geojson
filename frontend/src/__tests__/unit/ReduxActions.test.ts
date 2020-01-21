@@ -4,7 +4,6 @@ import {
 } from '../../actions/ChartActions/chartActions';
 
 import {
-  fetchAllBoatRamps,
   fetchRampsWithinBounds
 } from '../../actions/MapActions/mapActions';
 
@@ -74,24 +73,6 @@ describe('Testing the Map Actions', () => {
   afterAll(() => {
     mock.restore();
   })
-
-  it('Should fetch all the GeoJSON data', () => {
-    mock.onGet(`${config.ServerURL}/data`).replyOnce(200,
-      mockGeoData  
-    );
-    
-    const expectedAction = {
-      type: FETCH_ALL_GEOJSON,
-      payload: mockGeoData
-    }
-    const store = mockStore({});
-
-    return store.dispatch(fetchAllBoatRamps()).then(() => {
-      expect(store.getActions()).toEqual([expectedAction])
-    })
-
-  })
-
   
   it('Should fetch all GeoJSON data within the provided LatLngBounds', () => {
     const bounds = {

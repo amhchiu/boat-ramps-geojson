@@ -2,7 +2,6 @@ import React, { useRef, useEffect, useState } from 'react';
 import { select, scaleLinear, axisLeft, scaleBand, axisBottom, max, selectAll, ascending } from 'd3';
 import { IState, IRampsMaterial } from '../../constants/interfaces';
 import { theme } from '../../constants'
-import './MaterialChart.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSelectedMaterial, clearSelectedMaterial, clearSelectedSizeCategory } from '../../actions/MapActions/mapActions';
 import { filterColourFromMaterialSelection } from '../utils';

@@ -1,9 +1,8 @@
 import axios from 'axios';
 import { Dispatch } from 'react';
-import { IMapBounds, IGeoJSON } from '../../constants/interfaces';
+import { IMapBounds } from '../../constants/interfaces';
 import { LatLngBounds } from 'leaflet';
 import { 
-  FETCH_ALL_GEOJSON, 
   UPDATE_MAP_BOUNDS, 
   FETCH_GEOJSON_IN_BOUNDS,
   UPDATE_SELECTED_MATERIAL,
@@ -16,10 +15,6 @@ import config from '../../FrontEndConfig.json';
 
 const baseURL = config.ServerURL;
 
-const fetchAllBoatRampsSuccess = (geoData: IGeoJSON) => (
-  {type: FETCH_ALL_GEOJSON, payload: geoData}
-)
-
 const setMapBoundsSuccess = (newBounds: IMapBounds) => (
   {type: UPDATE_MAP_BOUNDS, payload: newBounds}
 );
@@ -28,20 +23,15 @@ const fetchRampsWithinBoundsSuccess = (features: GeoJSON.Feature[]) => (
   {type: FETCH_GEOJSON_IN_BOUNDS, payload: features}
 )
 
-export const fetchAllBoatRamps = (): any => (dispatch: Dispatch<any>) => {
-  const url = `${baseURL}/data`;
-  return axios.get(url)
-    .then(({data}) => {
-      const geoData: IGeoJSON = data;
-      dispatch(fetchAllBoatRampsSuccess(geoData))
-    })
-    .catch(err => console.error(err));
-}
-
 export const setMapBounds = (newBounds: IMapBounds): any => (dispatch: Dispatch<any>) => {
   dispatch(setMapBoundsSuccess(newBounds));
 }
 
+/**
+ * GETs the filtered array of GeoJSON Features within the
+ * provided rectangular LatLngBounds.
+ * @param latLngBounds 
+ */
 export const fetchRampsWithinBounds = (latLngBounds: LatLngBounds): any => (dispatch: Dispatch<any>) => {
   const newBounds: IMapBounds = {
     south: latLngBounds.getSouthWest().lat,
@@ -59,18 +49,32 @@ export const fetchRampsWithinBounds = (latLngBounds: LatLngBounds): any => (disp
     .catch(err => console.error(err)); 
 };
 
+/**
+ * Action to Set the selected material to state.
+ * @param material material of a Boat Ramp
+ */
 export const setSelectedMaterial = (material: string): any => (dispatch: Dispatch<any>) => {
   dispatch({type: UPDATE_SELECTED_MATERIAL, payload: material});
 }
 
+/**
+ * Action to clear the selected material in state.
+ */
 export const clearSelectedMaterial = (): any => (dispatch: Dispatch<any>) => {
   dispatch({type: CLEAR_SELECTED_MATERIAL});
 }
 
+/**
+ * Action to set selected area size Category (e.g. 50-200) in state
+ * @param sizeCategory Category of 
+ */
 export const setSelectedSizeCategory = (sizeCategory: string): any => (dispatch: Dispatch<any>) => {
   dispatch({type: UPDATE_SELECTED_SIZECAT, payload: sizeCategory});
 };
 
+/**
+ * Action clear selected area size category in state
+ */
 export const clearSelectedSizeCategory = (): any => (dispatch: Dispatch<any>) => {
   dispatch({type: CLEAR_SELECTED_SIZECAT});
 };

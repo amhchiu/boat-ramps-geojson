@@ -2,7 +2,6 @@ import React, { useRef, useEffect } from 'react';
 import { select, scaleLinear, axisLeft, scaleBand, axisBottom, max, selectAll, ascending } from 'd3';
 import { IState, IRampsArea } from '../../constants/interfaces';
 import { theme } from '../../constants'
-import './AreaChart.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { filterColourFromSizeCategorySelection } from '../utils';
 import { clearSelectedSizeCategory, setSelectedSizeCategory, clearSelectedMaterial } from '../../actions/MapActions/mapActions';
@@ -118,11 +117,6 @@ const BarChart = (props: IProps) => {
         .text(xLabel);
     }
   }, [data, selectedSizeCategory]);
-
-
-  const filterGeoDataWithSelection = (data: IRampsArea) => {
-
-  };
 
   return (
     <>

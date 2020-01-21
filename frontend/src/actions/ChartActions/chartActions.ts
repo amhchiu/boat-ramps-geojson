@@ -21,7 +21,7 @@ export const getRampsPerSizeCategoryInBoundsSuccess = (rampsPerSizeCategory: { [
 });
 
 /**
- * From the GeoJSON, get the number of ramps for each material. 
+ * get the number of ramps for each material from the provided GeoJSON data
  * @param geoData - GeoJSON data 
  * @param dispatch 
  */
@@ -37,6 +37,11 @@ export const getRampsPerMaterialInBounds = (geoData: IGeoJSON): any => (dispatch
   return dispatch(getRampsPerMaterialInBoundsSuccess(rampsPerMaterial));
 }
 
+/**
+ * Get the ramps per size category within the map bounds
+ * @param geoData GeoJSON Boat Ramp data
+ * @param categories Categories
+ */
 export const getRampsPerSizeCategoryInBounds = (geoData: IGeoJSON, categories: number[]): any => (dispatch: Dispatch<IGetRampsPerXInBoundsSuccess>) => {
   const features = geoData.features;
   let rampsPerSizeCategory: { [key: string]: number } = {};

@@ -1,5 +1,4 @@
 import { 
-  fetchAllBoatRamps, 
   fetchRampsWithinBounds,
   setMapBounds
 } from './MapActions/mapActions';
@@ -10,7 +9,6 @@ import {
 } from './ChartActions/chartActions';
 
 export {
-  fetchAllBoatRamps,
   fetchRampsWithinBounds,
   setMapBounds,
   getRampsPerMaterialInBounds,
