@@ -13,7 +13,7 @@ interface IProps {
 }
 
 const CHART_HEIGHT = 400;
-const CHART_WIDTH = 550;
+const CHART_WIDTH = 500;
 /**
  * Calculate the width of the browser window so we can position
  * the chart in the center of its div
@@ -49,8 +49,9 @@ const MaterialChart = (props: IProps) => {
       svg.selectAll('*').remove();
 
       // group element. shift elements by margin. right down. 0,0 
-      const chart = svg.append('g').attr('transform', `translate(${CHART_WIDTH / 2}, ${CHART_HEIGHT / 4})`);
-      
+      const chart = svg.append('g')
+      .attr('transform', `translate(${50}, ${20})`);
+
       // svg
       const yScale = scaleLinear()
         .domain([max(data, d => d.ramps) as number, 0])

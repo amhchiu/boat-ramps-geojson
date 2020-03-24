@@ -8,6 +8,8 @@ import L, { LatLngBounds, LatLng, latLng } from 'leaflet';
 import { IState, IMapBounds } from '../../constants/interfaces';
 import { filterColourFromMaterialSelection, filterColourFromSizeCategorySelection } from '../utils';
 
+import { Grid } from '@material-ui/core';
+
 const Map: React.FC = () => {
   const dispatch = useDispatch();
   const mapRef = useRef<any>(null);
@@ -166,11 +168,13 @@ const Map: React.FC = () => {
 
   return (
     <>
-      <div id='map' style={styles.map}>
-      </div>
-      <div className='row'>
+      <Grid item xs={12}>
+        <div id='map' style={styles.map}>
+        </div>
+      </Grid>
+      <Grid item xs={12}>
         Number of Ramps Visible - {featuresVisible}
-      </div>
+      </Grid>
     </>
   );
 };

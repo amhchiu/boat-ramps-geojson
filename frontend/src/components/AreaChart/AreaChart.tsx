@@ -47,7 +47,7 @@ const BarChart = (props: IProps) => {
       svg.selectAll('*').remove();
 
       // group element. shift elements by margin. right down. 0,0 
-      const chart = svg.append('g').attr('transform', `translate(${CHART_WIDTH / 2}, ${CHART_HEIGHT / 4})`);
+      const chart = svg.append('g').attr('transform', `translate(${50}, ${20})`);
 
       /**
        * SVG coordinate system starts on top left! 
