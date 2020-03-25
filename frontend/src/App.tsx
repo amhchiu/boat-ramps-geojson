@@ -4,16 +4,15 @@ import MaterialChart from './components/MaterialChart/MaterialChart';
 import AreaChart from './components/AreaChart/AreaChart';
 import { Grid } from '@material-ui/core';
 
-import { theme } from './constants';
+import {theme} from './constants';
 
-import './App.css';
 import { IState, IRampsMaterial, IRampsArea } from './constants/interfaces';
 import { useSelector, useDispatch } from 'react-redux';
 import { getRampsPerMaterialInBounds, getRampsPerSizeCategoryInBounds } from './actions/actions';
 
 import config from './FrontEndConfig.json';
 
-import { style } from 'typestyle';
+import { style, media } from 'typestyle';
 
 const App: React.FC = () => {
 
@@ -77,15 +76,15 @@ const App: React.FC = () => {
   }, [rampsPerSizeCategoryData]);
 
   const HeaderRow = () => (
-    <Grid item xs={12} className={headerRowFont}>
+    <Grid item xs={12} className={headerRowFontClass}>
       Boat Ramps GeoJSON Visualisation
     </Grid>
   );
 
   const MaterialChartRow = () => (
     <>
-      <Grid item xs={12} className={materialRowFont}>Ramps per Material</Grid>
-      <Grid item xs={12} className={materialChartClass}>
+      <Grid item xs={12} className={chartRowFont}>Ramps per Material</Grid>
+      <Grid item xs={12} className={chartRowClass}>
         <MaterialChart
           data={formattedRampMaterialChartData}
           xLabel={'Materials'}
@@ -97,8 +96,8 @@ const App: React.FC = () => {
 
   const AreaChartRow = () => (
     <>
-      <Grid item xs={12} className={materialRowFont}>Ramps per Area</Grid>
-      <Grid item xs={12} className={materialChartClass}>
+      <Grid item xs={12} className={chartRowFont}>Ramps per Area</Grid>
+      <Grid item xs={12} className={chartRowClass}>
         <AreaChart
           data={formattedRampsSizeChartData}
           xLabel={'Area'}
@@ -110,9 +109,9 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
-      <Grid container spacing={2}>
+      <Grid container spacing={2} className={rootClass}>
         <Grid item xs={3} />
-        <Grid container item xs={12} sm={6}>
+        <Grid container item xs={12} md={6}>
           <HeaderRow />
           <Map />
           <MaterialChartRow />
@@ -126,6 +125,12 @@ const App: React.FC = () => {
 
 export default App;
 
+const rootClass = style(
+  { paddingRight: theme.sizes.padding },
+  { paddingLeft: theme.sizes.padding },
+  { textAlign: 'center'}
+);
+
 const fontSize = (value: number | string) => {
   const valueStr = typeof value === 'string' ? value : value + 'px';
   return {
@@ -133,18 +138,19 @@ const fontSize = (value: number | string) => {
   }
 }
 
-const headerRowFont = style(
-  fontSize(24),
-  { fontWeight: 'bold' },
-  { textAlign: 'center' }
+const headerRowFontClass = style(
+  {transition: 'font-size .2s'},
+  {fontWeight: 'bold'},
+  media({minWidth: 0, maxWidth: 960}, fontSize(24)),
+  media({minWidth: 961}, fontSize(36))
 );
 
-const materialRowFont = style(
+const chartRowFont = style(
   fontSize(16),
-  { textAlign: 'center' }
+  { fontWeight: 'bolder'}
 )
 
-const materialChartClass = style(
+const chartRowClass = style(
   { border: 'solid' },
   { height: '500px' }
 )
