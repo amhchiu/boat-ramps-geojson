@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import './Map.css';
 import config from '../../FrontEndConfig.json'
 import { setMapBounds, fetchRampsWithinBounds } from '../../actions/actions';
 
@@ -9,6 +8,7 @@ import { IState, IMapBounds } from '../../constants/interfaces';
 import { filterColourFromMaterialSelection, filterColourFromSizeCategorySelection } from '../utils';
 
 import { Grid } from '@material-ui/core';
+import './Map.styles'; 
 
 const Map: React.FC = () => {
   const dispatch = useDispatch();

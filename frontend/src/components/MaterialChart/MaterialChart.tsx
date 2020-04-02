@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { select, scaleLinear, axisLeft, scaleBand, axisBottom, max, ascending } from 'd3';
 import { IState, IRampsMaterial } from '../../constants/interfaces';
-import { theme } from '../../constants'
+import { BasePadding } from '../../constants'
 import { useDispatch, useSelector } from 'react-redux';
 import { setSelectedMaterial, clearSelectedMaterial, clearSelectedSizeCategory } from '../../actions/MapActions/mapActions';
 import { filterColourFromMaterialSelection } from '../utils';
@@ -111,7 +111,7 @@ const MaterialChart = (props: IProps) => {
 
       chart.append('text')
         .attr('x', -(CHART_HEIGHT / 2))
-        .attr('y', -theme.sizes.padding * 2)
+        .attr('y', -BasePadding * 2)
         .attr('transform', 'rotate(-90)')
         .attr('text-anchor', 'middle')
         .text(yLabel);

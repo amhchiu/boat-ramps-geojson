@@ -4,15 +4,13 @@ import MaterialChart from './components/MaterialChart/MaterialChart';
 import AreaChart from './components/AreaChart/AreaChart';
 import { Grid } from '@material-ui/core';
 
-import {theme} from './constants';
-
 import { IState, IRampsMaterial, IRampsArea } from './constants/interfaces';
 import { useSelector, useDispatch } from 'react-redux';
 import { getRampsPerMaterialInBounds, getRampsPerSizeCategoryInBounds } from './actions/actions';
 
 import config from './FrontEndConfig.json';
 
-import { style, media } from 'typestyle';
+import styles from './App.styles';
 
 const App: React.FC = () => {
 
@@ -76,15 +74,15 @@ const App: React.FC = () => {
   }, [rampsPerSizeCategoryData]);
 
   const HeaderRow = () => (
-    <Grid item xs={12} className={headerRowFontClass}>
+    <Grid item xs={12} className={styles.header}>
       Boat Ramps GeoJSON Visualisation
     </Grid>
   );
 
   const MaterialChartRow = () => (
     <>
-      <Grid item xs={12} className={chartRowFont}>Ramps per Material</Grid>
-      <Grid item xs={12} className={chartRowClass}>
+      <Grid item xs={12} className={styles.subtitle}>Ramps per Material</Grid>
+      <Grid item xs={12} className={styles.chart}>
         <MaterialChart
           data={formattedRampMaterialChartData}
           xLabel={'Materials'}
@@ -96,8 +94,8 @@ const App: React.FC = () => {
 
   const AreaChartRow = () => (
     <>
-      <Grid item xs={12} className={chartRowFont}>Ramps per Area</Grid>
-      <Grid item xs={12} className={chartRowClass}>
+      <Grid item xs={12} className={styles.subtitle}>Ramps per Area</Grid>
+      <Grid item xs={12} className={styles.chart}>
         <AreaChart
           data={formattedRampsSizeChartData}
           xLabel={'Area'}
@@ -109,7 +107,7 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
-      <Grid container spacing={2} className={rootClass}>
+      <Grid container spacing={2} className={styles.container}>
         <Grid item xs={3} />
         <Grid container item xs={12} md={6}>
           <HeaderRow />
@@ -124,33 +122,3 @@ const App: React.FC = () => {
 }
 
 export default App;
-
-const rootClass = style(
-  { paddingRight: theme.sizes.padding },
-  { paddingLeft: theme.sizes.padding },
-  { textAlign: 'center'}
-);
-
-const fontSize = (value: number | string) => {
-  const valueStr = typeof value === 'string' ? value : value + 'px';
-  return {
-    fontSize: valueStr
-  }
-}
-
-const headerRowFontClass = style(
-  {transition: 'font-size .2s'},
-  {fontWeight: 'bold'},
-  media({minWidth: 0, maxWidth: 960}, fontSize(24)),
-  media({minWidth: 961}, fontSize(36))
-);
-
-const chartRowFont = style(
-  fontSize(16),
-  { fontWeight: 'bolder'}
-)
-
-const chartRowClass = style(
-  { border: 'solid' },
-  { height: '500px' }
-)

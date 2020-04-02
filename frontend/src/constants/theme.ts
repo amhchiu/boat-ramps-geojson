@@ -1,7 +1,3 @@
-const sizes = {
-  base: 12,
-  padding: 12,
-  font: 12
-}
+export const BasePadding = 12;
+export const BaseFont = 12;
 
-export { sizes };
