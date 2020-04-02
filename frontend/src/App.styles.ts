@@ -3,7 +3,7 @@ import { BasePadding, BaseFont } from './constants';
 
 export default stylesheet({
   container: {
-    padding: `${BasePadding} 0`,
+    padding: `0px ${BasePadding}px`,
     textAlign: 'center'
   },
   header: {
