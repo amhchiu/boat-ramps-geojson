@@ -5,6 +5,7 @@ import { BasePadding } from '../../constants'
 import { useDispatch, useSelector } from 'react-redux';
 import { filterColourFromSizeCategorySelection } from '../utils';
 import { clearSelectedSizeCategory, setSelectedSizeCategory, clearSelectedMaterial } from '../../actions/MapActions/mapActions';
+import { useDeepEffect } from '../utils/useDeepEffect';
 
 interface IProps {
   data: IRampsArea[],
@@ -21,22 +22,22 @@ const CHART_WIDTH = 550;
  * - Number of ramps per size category (categories are areas in 3 different ranges [0,50], [50,200], [200,526])
  * @param props 
  */
-const BarChart = (props: IProps) => {
+const AreaChart = (props: IProps) => {
 
   const { data, xLabel, yLabel } = props;
   const dispatch = useDispatch();
   const selectedSizeCategory = useSelector((state: IState) => state.mapData.selectedSizeCategory);
   const d3Container = useRef(null);
 
-  useEffect(() => {
+  useDeepEffect(() => {
     if (data.length > 0) {
-      let keys = Object.keys(data[0]);
+      const keys = Object.keys(data[0]);
       const xValueName = keys[0],
         yValueName = keys[1];
       
       data.sort((a: IRampsArea, b: IRampsArea) => {
-        let a1 = a.area.split('-');
-        let b1 = b.area.split('-');
+        const a1 = a.area.split('-');
+        const b1 = b.area.split('-');
         if (parseInt(b1[0]) > parseInt(a1[0])) return -1;
         else return 1;
       });
@@ -130,4 +131,4 @@ const BarChart = (props: IProps) => {
   )
 }
 
-export default BarChart;
+export {AreaChart};

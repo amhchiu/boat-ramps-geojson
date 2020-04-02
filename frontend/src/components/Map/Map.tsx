@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import config from '../../FrontEndConfig.json'
 import { setMapBounds, fetchRampsWithinBounds } from '../../actions/actions';
 
-import L, { LatLngBounds, LatLng, latLng } from 'leaflet';
+import L, { LatLngBounds, latLng } from 'leaflet';
 import { IState, IMapBounds } from '../../constants/interfaces';
 import { filterColourFromMaterialSelection, filterColourFromSizeCategorySelection } from '../utils';
 
@@ -43,7 +43,7 @@ const Map: React.FC = () => {
       ]
     });
 
-    let mapInstance: L.Map = mapRef.current;
+    const mapInstance: L.Map = mapRef.current;
     // When map is first rendered, we want to fetch the ramps within the view only and then every time on panning
     dispatch(fetchRampsWithinBounds(mapInstance.getBounds()));
     // bind map panning to updating the view bounds in state

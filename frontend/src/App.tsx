@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Map from './components/Map/Map';
 import MaterialChart from './components/MaterialChart/MaterialChart';
-import AreaChart from './components/AreaChart/AreaChart';
+import { AreaChart } from './components/AreaChart/AreaChart';
 import { Grid } from '@material-ui/core';
 
 import { IState, IRampsMaterial, IRampsArea } from './constants/interfaces';

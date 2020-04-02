@@ -5,6 +5,7 @@ import { BasePadding } from '../../constants'
 import { useDispatch, useSelector } from 'react-redux';
 import { setSelectedMaterial, clearSelectedMaterial, clearSelectedSizeCategory } from '../../actions/MapActions/mapActions';
 import { filterColourFromMaterialSelection } from '../utils';
+import {useDeepEffect} from '../utils/useDeepEffect';
 
 interface IProps {
   data: IRampsMaterial[],
@@ -33,9 +34,9 @@ const MaterialChart = (props: IProps) => {
   /**
    * Builds the d3 SVG bar chart from the ramps per material data from the Props
    */
-  useEffect(() => {
+  useDeepEffect(() => {
     if (data.length > 0) {
-      let keys = Object.keys(data[0]);
+      const keys = Object.keys(data[0]);
       const xValueName = keys[0],
         yValueName = keys[1];
 

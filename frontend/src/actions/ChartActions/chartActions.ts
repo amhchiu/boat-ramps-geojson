@@ -10,6 +10,7 @@ interface IGetRampsPerXInBoundsSuccess {
   payload: { [key: string]: number }
 }
 
+
 export const getRampsPerMaterialInBoundsSuccess = (rampsPerMaterial: { [key: string]: number }): IGetRampsPerXInBoundsSuccess => ({
   type: GET_RAMPS_MATERIALS_IN_BOUNDS,
   payload: rampsPerMaterial
@@ -31,7 +32,7 @@ export const getRampsPerMaterialInBounds = (geoData: IGeoJSON): any => (dispatch
   features.forEach((feature: GeoJSON.Feature) => {
     if (feature.properties) {
       const material = feature.properties.material;
-      rampsPerMaterial[material] = (rampsPerMaterial[material] || 0) + 1;
+      rampsPerMaterial[material] = (rampsPerMaterial[material] ?? 0) + 1;
     };
   });
   return dispatch(getRampsPerMaterialInBoundsSuccess(rampsPerMaterial));
