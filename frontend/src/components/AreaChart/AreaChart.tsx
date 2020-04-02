@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { select, scaleLinear, axisLeft, scaleBand, axisBottom, max, selectAll, ascending } from 'd3';
 import { IState, IRampsArea } from '../../constants/interfaces';
-import { theme } from '../../constants'
+import { BasePadding } from '../../constants'
 import { useDispatch, useSelector } from 'react-redux';
 import { filterColourFromSizeCategorySelection } from '../utils';
 import { clearSelectedSizeCategory, setSelectedSizeCategory, clearSelectedMaterial } from '../../actions/MapActions/mapActions';
@@ -47,7 +47,7 @@ const BarChart = (props: IProps) => {
       svg.selectAll('*').remove();
 
       // group element. shift elements by margin. right down. 0,0 
-      const chart = svg.append('g').attr('transform', `translate(${CHART_WIDTH / 2}, ${CHART_HEIGHT / 4})`);
+      const chart = svg.append('g').attr('transform', `translate(${50}, ${20})`);
 
       /**
        * SVG coordinate system starts on top left! 
@@ -105,7 +105,7 @@ const BarChart = (props: IProps) => {
       // Axis labels
       chart.append('text')
         .attr('x', -(CHART_HEIGHT / 2))
-        .attr('y', -theme.sizes.padding * 2)
+        .attr('y', -BasePadding * 2)
         .attr('transform', 'rotate(-90)')
         .attr('text-anchor', 'middle')
         .text(yLabel);

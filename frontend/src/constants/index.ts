@@ -1,5 +1,2 @@
-import * as theme from './theme';
-
-export { 
-  theme
-}
+export * from './theme';
+export * from './interfaces';

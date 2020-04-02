@@ -1,12 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import './Map.css';
 import config from '../../FrontEndConfig.json'
 import { setMapBounds, fetchRampsWithinBounds } from '../../actions/actions';
 
 import L, { LatLngBounds, LatLng, latLng } from 'leaflet';
 import { IState, IMapBounds } from '../../constants/interfaces';
 import { filterColourFromMaterialSelection, filterColourFromSizeCategorySelection } from '../utils';
+
+import { Grid } from '@material-ui/core';
+import './Map.styles'; 
 
 const Map: React.FC = () => {
   const dispatch = useDispatch();
@@ -166,11 +168,13 @@ const Map: React.FC = () => {
 
   return (
     <>
-      <div id='map' style={styles.map}>
-      </div>
-      <div className='row'>
+      <Grid item xs={12}>
+        <div id='map' style={styles.map}>
+        </div>
+      </Grid>
+      <Grid item xs={12}>
         Number of Ramps Visible - {featuresVisible}
-      </div>
+      </Grid>
     </>
   );
 };
